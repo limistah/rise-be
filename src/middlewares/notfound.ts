@@ -1,5 +1,5 @@
 import HTTP_STATUS from 'http-status';
-import { Application, NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { BaseResponse } from '../base-module/response';
 
 export const notFoundMW = (req: Request, res: Response, next: NextFunction) => {

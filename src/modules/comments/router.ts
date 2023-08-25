@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { CommentsController } from './controller';
 import { createCommentValidator, getCommentsValidator } from './validator';
 

@@ -1,10 +1,9 @@
+import './config';
 import express, { Application } from 'express';
-import dotenv from 'dotenv';
 import morgan from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
 
-dotenv.config();
 import { router } from './routes';
 import { notFoundMW } from './middlewares/notfound';
 import { errorMW } from './middlewares/error';

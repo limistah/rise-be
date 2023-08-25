@@ -24,6 +24,8 @@ model Users {
   gender Gender @default(NONE)
   posts Posts[]
   comments Comments[]
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
 }
 
 model Comments {
@@ -33,6 +35,8 @@ model Comments {
   postId Int
   userId Int
   user Users @relation(fields: [userId], references: [id])
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
 }
 
 model Posts {
@@ -40,5 +44,7 @@ model Posts {
   content String
   comments Comments[] 
   userId Int
-  user Users @relation(fields: [userId], references: [id]) 
+  user Users @relation(fields: [userId], references: [id])
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt 
 }

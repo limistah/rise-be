@@ -1,0 +1,20 @@
+version: "3"
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: rise-be
+      POSTGRES_PORT: 5433
+  
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5433/rise-be?schema=public
+      API_KEY: unknown
+    depends_on: 
+      - db

@@ -7,6 +7,7 @@ import { validationResult } from 'express-validator';
 import querystring from 'querystring';
 import { UsersService } from '../users/service';
 import { CommentsService } from '../comments/service';
+import { ErrorException } from '../../exceptions/error';
 
 export class PostsController extends BaseController {
   service: PostsService;
@@ -30,13 +31,7 @@ export class PostsController extends BaseController {
       const user = await this.usersService.findOne({ id: req.body.userId });
 
       if (!user) {
-        throw {
-          errors: [
-            {
-              msg: 'user with id not found',
-            },
-          ],
-        };
+        throw new ErrorException('user with id not found');
       }
 
       const post = await this.service.createPost({
@@ -69,13 +64,7 @@ export class PostsController extends BaseController {
       });
 
       if (!post) {
-        throw {
-          errors: [
-            {
-              msg: 'post with id not found',
-            },
-          ],
-        };
+        throw new ErrorException('post with id not found');
       }
       const qs = querystring.parse(req.url.split('?')[1]);
       const comments = await this.commentsService.getComments(

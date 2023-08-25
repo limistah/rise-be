@@ -7,6 +7,7 @@ import { validationResult } from 'express-validator';
 import querystring from 'querystring';
 import { UsersService } from '../users/service';
 import { PostsService } from '../posts/service';
+import { ErrorException } from '../../exceptions/error';
 
 export class CommentsController extends BaseController {
   service: CommentsService;
@@ -23,7 +24,6 @@ export class CommentsController extends BaseController {
   public async createComment(req: Request, res: Response) {
     try {
       const result = validationResult(req);
-
       if (!result.isEmpty()) {
         result.throw();
       }
@@ -31,26 +31,14 @@ export class CommentsController extends BaseController {
         id: req.body.userId,
       });
       if (!user) {
-        throw {
-          errors: [
-            {
-              msg: 'user with id not found',
-            },
-          ],
-        };
+        throw new ErrorException('user with id not found');
       }
 
       const post = await this.postsService.findOne({
         id: req.body.postId,
       });
       if (!post) {
-        throw {
-          errors: [
-            {
-              msg: 'post with id not found',
-            },
-          ],
-        };
+        throw new ErrorException('post with id not found');
       }
 
       const comment = await this.service.createComment({

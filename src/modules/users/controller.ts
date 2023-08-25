@@ -6,6 +6,7 @@ import HTTP_STATUS from 'http-status';
 import { validationResult } from 'express-validator';
 import querystring from 'querystring';
 import { PostsService } from '../posts/service';
+import { ErrorException } from '../../exceptions/error';
 
 export class UsersController extends BaseController {
   service: UsersService;
@@ -25,13 +26,7 @@ export class UsersController extends BaseController {
 
       const userExists = await this.service.findOne({ email: req.body.email });
       if (userExists) {
-        throw {
-          errors: [
-            {
-              msg: 'user with email already exists',
-            },
-          ],
-        };
+        throw new ErrorException('user with email already exists');
       }
       const user = await this.service.createUser({
         firstName: req.body.firstName,
@@ -65,13 +60,7 @@ export class UsersController extends BaseController {
       });
 
       if (!user) {
-        throw {
-          errors: [
-            {
-              msg: 'user with id not found',
-            },
-          ],
-        };
+        throw new ErrorException('user with id not found');
       }
       const qs = querystring.parse(req.url.split('?')[1]);
       const posts = await this.postsService.getPosts(

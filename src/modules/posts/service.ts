@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client';
-import { prisma } from '../../base-module/service';
+import { prisma } from '../../base-module/prisma';
 
 export class PostsService {
   prisma: PrismaClient;

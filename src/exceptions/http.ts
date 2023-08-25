@@ -5,7 +5,6 @@ class HttpException extends Error {
     super(message);
     this.status = status;
     this.message = message;
-    console.log(this.message);
   }
 }
 
