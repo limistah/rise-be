@@ -28,8 +28,8 @@ model Users {
 
 model Comments {
   id Int @id @default(autoincrement())
-  comment String
-  content Posts @relation(fields: [postId], references: [id])
+  content String
+  post Posts @relation(fields: [postId], references: [id])
   postId Int
   userId Int
   user Users @relation(fields: [userId], references: [id])

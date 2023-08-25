@@ -6,15 +6,18 @@ import HTTP_STATUS from 'http-status';
 import { validationResult } from 'express-validator';
 import querystring from 'querystring';
 import { UsersService } from '../users/service';
+import { CommentsService } from '../comments/service';
 
 export class PostsController extends BaseController {
   service: PostsService;
   usersService: UsersService;
+  commentsService: CommentsService;
 
   constructor() {
     super();
     this.service = new PostsService();
     this.usersService = new UsersService();
+    this.commentsService = new CommentsService();
   }
 
   public async createPost(req: Request, res: Response) {
@@ -41,10 +44,61 @@ export class PostsController extends BaseController {
         content: req.body.content,
       });
 
-      const response = new BaseResponse(201, post).get();
+      const response = new BaseResponse(HTTP_STATUS.CREATED, post).get();
       return res.status(response.status).json(response);
     } catch (error) {
-      const response = new BaseResponse(400, null, null, error as Error).get();
+      const response = new BaseResponse(
+        HTTP_STATUS.BAD_REQUEST,
+        null,
+        null,
+        error as Error
+      ).get();
+      return res.status(response.status).json(response);
+    }
+  }
+
+  public async getPostComments(req: Request, res: Response) {
+    try {
+      const result = validationResult(req);
+      if (!result.isEmpty()) {
+        result.throw();
+      }
+
+      const post = await this.service.findOne({
+        id: Number(req.params.postId),
+      });
+
+      if (!post) {
+        throw {
+          errors: [
+            {
+              msg: 'post with id not found',
+            },
+          ],
+        };
+      }
+      const qs = querystring.parse(req.url.split('?')[1]);
+      const comments = await this.commentsService.getComments(
+        Number(qs.take || 10),
+        Number(qs.skip || 0),
+        { postId: Number(req.params.postId) }
+      );
+      const totalComments = await this.commentsService.getTotalComments({
+        postId: Number(req.params.postId),
+      });
+      const response = new BaseResponse(
+        HTTP_STATUS.OK,
+        comments,
+        totalComments
+      ).get();
+      return res.status(response.status).json(response);
+    } catch (error) {
+      const response = new BaseResponse(
+        HTTP_STATUS.BAD_REQUEST,
+        null,
+        null,
+        error as Error
+      ).get();
       return res.status(response.status).json(response);
     }
   }
@@ -53,10 +107,7 @@ export class PostsController extends BaseController {
     try {
       const result = validationResult(req);
       if (!result.isEmpty()) {
-        const response = new BaseResponse(HTTP_STATUS.BAD_REQUEST, {
-          errors: result.array(),
-        }).get();
-        return res.status(response.status).json(response);
+        result.throw();
       }
       const qs = querystring.parse(req.url.split('?')[1]);
       const Posts = await this.service.getPosts(
@@ -64,10 +115,19 @@ export class PostsController extends BaseController {
         Number(qs.skip || 0)
       );
       const totalPosts = await this.service.getTotalPosts();
-      const response = new BaseResponse(200, Posts, totalPosts).get();
+      const response = new BaseResponse(
+        HTTP_STATUS.OK,
+        Posts,
+        totalPosts
+      ).get();
       return res.status(response.status).json(response);
     } catch (error) {
-      const response = new BaseResponse(400, null, null, error as Error).get();
+      const response = new BaseResponse(
+        HTTP_STATUS.BAD_REQUEST,
+        null,
+        null,
+        error as Error
+      ).get();
       return res.status(response.status).json(response);
     }
   }

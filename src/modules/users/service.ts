@@ -1,9 +1,10 @@
 import { Prisma, PrismaClient } from '@prisma/client';
+import { prisma } from '../../base-module/service';
 
 export class UsersService {
   prisma: PrismaClient;
   constructor() {
-    this.prisma = new PrismaClient();
+    this.prisma = prisma;
   }
 
   async createUser(data: Prisma.UsersCreateInput) {

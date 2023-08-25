@@ -2,6 +2,7 @@ import request from 'supertest';
 
 import { app } from '../src/app';
 import { faker } from '@faker-js/faker';
+import { randomRange } from './util';
 const server = request(app);
 
 describe('Users Tests', () => {
@@ -74,6 +75,27 @@ describe('Users Tests', () => {
   describe('GET /users', () => {
     test('should GET users successfully', async () => {
       const res = await server.get(`/api/v1/users`).set({
+        'X-API-KEY': 'unknown',
+      });
+      expect(res.status).toBe(200);
+    });
+  });
+
+  describe('GET /users/:userId/posts', () => {
+    test('should return error for an invalid userId', async () => {
+      const res = await server.get(`/api/v1/users/${3200}/posts`).set({
+        'X-API-KEY': 'unknown',
+      });
+      expect(res.status).toBe(400);
+      expect(res.body.data.errors[0].msg).toBe('user with id not found');
+    });
+    test('should get posts for a valid userId', async () => {
+      const users = await server.get(`/api/v1/users`).set({
+        'X-API-KEY': 'unknown',
+      });
+      expect(users.status).toBe(200);
+      const user = users.body.data[randomRange(users.body.data.length)];
+      const res = await server.get(`/api/v1/users/${user.id}/posts`).set({
         'X-API-KEY': 'unknown',
       });
       expect(res.status).toBe(200);

@@ -31,7 +31,7 @@ app.use(morgan('tiny'));
 
 // Application
 app.disable('x-powered-by');
-// app.use(authMW);
+app.use(authMW);
 
 app.use('/api/v1', router);
 app.all('*', notFoundMW);

@@ -11,5 +11,14 @@ router.get('/', getPostsValidator(), (req: Request, res: Response) => {
   const controller = new PostsController();
   return controller.getPosts(req, res);
 });
+
+router.get(
+  '/:postId/comments',
+  getPostsValidator(),
+  (req: Request, res: Response) => {
+    const controller = new PostsController();
+    return controller.getPostComments(req, res);
+  }
+);
 const BASE_PATH = '/posts';
 export { router, BASE_PATH };

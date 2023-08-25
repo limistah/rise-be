@@ -9,7 +9,7 @@
     "start": "node build/index.js",
     "build": "tsc",
     "test": "jest",
-    "test:watch": "jest --watch",
+    "test:watch": "cross-env API_KEY=unknown jest --watch",
     "dev": "nodemon"
   },
   "engines": {
