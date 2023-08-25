@@ -7,6 +7,7 @@
  - Jest (for unit tests)
 
 ## Postman Docs
+The postman documentation is published at: https://documenter.getpostman.com/view/5509541/2s9Y5YR2KC
 
 ## Deployed Version
 The project is deployed on render.com and the the base URL is: https://rise-be.onrender.com/
