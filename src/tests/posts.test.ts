@@ -36,16 +36,22 @@ describe('Posts Tests', () => {
       expect(res.body.data.errors[0].path).toBe('userId');
     });
     test('should create a post', async () => {
-      const users = await server.get(`/api/v1/users`).set({
-        'X-API-KEY': 'unknown',
-      });
-      expect(users.status).toBe(200);
-      const user = users.body.data[randomRange(users.body.data.length)];
+      const user = await server
+        .post(`/api/v1/users`)
+        .set({
+          'X-API-KEY': 'unknown',
+        })
+        .send({
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
+          gender: 'MALE',
+          email: faker.internet.email(),
+        });
       const res = await server
         .post(`/api/v1/posts`)
         .send({
           content: faker.lorem.sentence(20),
-          userId: Number(user.id),
+          userId: Number(user.body.data.id),
         })
         .set({
           'X-API-KEY': 'unknown',
