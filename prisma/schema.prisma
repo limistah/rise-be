@@ -20,7 +20,7 @@ model Users {
   id Int @id @default(autoincrement())
   firstName String
   lastName String
-  email String @unique
+  email String @unique 
   gender Gender @default(NONE)
   posts Posts[]
   comments Comments[]
@@ -29,7 +29,7 @@ model Users {
 model Comments {
   id Int @id @default(autoincrement())
   comment String
-  post Posts @relation(fields: [postId], references: [id])
+  content Posts @relation(fields: [postId], references: [id])
   postId Int
   userId Int
   user Users @relation(fields: [userId], references: [id])
@@ -37,7 +37,7 @@ model Comments {
 
 model Posts {
   id Int @id @default(autoincrement())
-  post String
+  content String
   comments Comments[] 
   userId Int
   user Users @relation(fields: [userId], references: [id]) 

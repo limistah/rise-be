@@ -1,7 +1,7 @@
 import { BaseResponseType } from './type';
 
 export class BaseResponse {
-  private error: boolean;
+  private error?: Error;
   private status: number;
   private total?: number | null;
   private data: Record<string, any> | null;
@@ -9,7 +9,7 @@ export class BaseResponse {
     status: number,
     data: Record<string, any> | null,
     total?: number | null,
-    error?: any
+    error?: Error
   ) {
     this.data = data;
     this.error = error;
@@ -18,9 +18,10 @@ export class BaseResponse {
   }
   get(): BaseResponseType {
     return {
-      error: this.error,
-      data: this.data,
-      total: this.total,
+      error: !!this.error,
+      data: this.data || this.error,
+      total: this.total ?? undefined,
+
       status: this.status,
     };
   }

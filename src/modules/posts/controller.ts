@@ -1,44 +1,47 @@
 import { BaseController } from '../../base-module/controller';
 import { BaseResponse } from '../../base-module/response';
 import { Request, Response } from 'express';
-import { UsersService } from './service';
+import { PostsService } from './service';
 import HTTP_STATUS from 'http-status';
 import { validationResult } from 'express-validator';
 import querystring from 'querystring';
+import { UsersService } from '../users/service';
 
+export class PostsController extends BaseController {
+  service: PostsService;
+  usersService: UsersService;
 
-export class UsersController extends BaseController {
-  service: UsersService;
   constructor() {
     super();
-    this.service = new UsersService();
+    this.service = new PostsService();
+    this.usersService = new UsersService();
   }
 
-  public async createUser(req: Request, res: Response) {
+  public async createPost(req: Request, res: Response) {
     try {
       const result = validationResult(req);
+
       if (!result.isEmpty()) {
         result.throw();
       }
+      const user = await this.usersService.findOne({ id: req.body.userId });
 
-      const userExists = await this.service.findOne({ email: req.body.email });
-      if (userExists) {
+      if (!user) {
         throw {
           errors: [
             {
-              msg: 'user with email already exists',
+              msg: 'user with id not found',
             },
           ],
         };
       }
-      const user = await this.service.createUser({
-        firstName: req.body.firstName,
-        lastName: req.body.firstName,
-        email: req.body.email,
-        gender: req.body.gender,
+
+      const post = await this.service.createPost({
+        userId: req.body.userId,
+        content: req.body.content,
       });
 
-      const response = new BaseResponse(201, user).get();
+      const response = new BaseResponse(201, post).get();
       return res.status(response.status).json(response);
     } catch (error) {
       const response = new BaseResponse(400, null, null, error as Error).get();
@@ -46,7 +49,7 @@ export class UsersController extends BaseController {
     }
   }
 
-  public async getUsers(req: Request, res: Response) {
+  public async getPosts(req: Request, res: Response) {
     try {
       const result = validationResult(req);
       if (!result.isEmpty()) {
@@ -56,12 +59,12 @@ export class UsersController extends BaseController {
         return res.status(response.status).json(response);
       }
       const qs = querystring.parse(req.url.split('?')[1]);
-      const users = await this.service.getUsers(
+      const Posts = await this.service.getPosts(
         Number(qs.take || 10),
         Number(qs.skip || 0)
       );
-      const totalUsers = await this.service.getTotalUsers();
-      const response = new BaseResponse(200, users, totalUsers).get();
+      const totalPosts = await this.service.getTotalPosts();
+      const response = new BaseResponse(200, Posts, totalPosts).get();
       return res.status(response.status).json(response);
     } catch (error) {
       const response = new BaseResponse(400, null, null, error as Error).get();

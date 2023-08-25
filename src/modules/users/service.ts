@@ -10,6 +10,10 @@ export class UsersService {
     return await this.prisma.users.create({ data: data });
   }
 
+  async findOne(query: Prisma.UsersWhereInput) {
+    return this.prisma.users.findFirst({ where: query });
+  }
+
   async getUsers(take = 10, page = 0, query?: Prisma.UsersWhereInput) {
     return await this.prisma.users.findMany({
       where: query,
