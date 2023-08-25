@@ -13,12 +13,13 @@ The postman documentation is published at: https://documenter.getpostman.com/vie
 The project is deployed on render.com and the the base URL is: https://rise-be.onrender.com/
 
 ## Included
-[x] Create and retrieve users
-[x] Create post for a user and retrieve all posts for a user
-[x] Create comment for a post and retrieve all comments for a post
-[x] API Token based authentication middleware
-[x] Dockerfile for containerization
-[x] Docker Compose file for easy dev environment
+- [x] Create and retrieve users
+- [x] Create post for a user and retrieve all posts for a user
+- [x] Create comment for a post and retrieve all comments for a post
+- [x] API Token based authentication middleware
+- [x] Dockerfile for containerization
+- [x] Docker Compose file for easy dev environment
+- [x] Query Optimization
 
 ## Performance Solution
 The final solution below utilizes the efficiency of subqueries.
