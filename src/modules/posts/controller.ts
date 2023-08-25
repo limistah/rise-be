@@ -21,7 +21,7 @@ export class PostsController extends BaseController {
     this.commentsService = new CommentsService();
   }
 
-  public async createPost(req: Request, res: Response) {
+  public async createPost(req: Request, res: Response): Promise<Response> {
     try {
       const result = validationResult(req);
 
@@ -52,7 +52,7 @@ export class PostsController extends BaseController {
     }
   }
 
-  public async getPostComments(req: Request, res: Response) {
+  public async getPostComments(req: Request, res: Response): Promise<Response> {
     try {
       const result = validationResult(req);
       if (!result.isEmpty()) {
@@ -92,7 +92,7 @@ export class PostsController extends BaseController {
     }
   }
 
-  public async getPosts(req: Request, res: Response) {
+  public async getPosts(req: Request, res: Response): Promise<Response> {
     try {
       const result = validationResult(req);
       if (!result.isEmpty()) {

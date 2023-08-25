@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Posts, Prisma, PrismaClient } from '@prisma/client';
 import { prisma } from '../../base-module/prisma';
 
 export class PostsService {
@@ -7,11 +7,15 @@ export class PostsService {
     this.prisma = prisma;
   }
 
-  async createPost(data: Prisma.PostsUncheckedCreateInput) {
+  async createPost(data: Prisma.PostsUncheckedCreateInput): Promise<Posts> {
     return await this.prisma.posts.create({ data: data });
   }
 
-  async getPosts(take = 10, page = 0, query?: Prisma.PostsWhereInput) {
+  async getPosts(
+    take = 10,
+    page = 0,
+    query?: Prisma.PostsWhereInput
+  ): Promise<Posts[]> {
     return await this.prisma.posts.findMany({
       where: query,
       take,
@@ -19,11 +23,11 @@ export class PostsService {
     });
   }
 
-  async findOne(query: Prisma.PostsWhereInput) {
-    return this.prisma.posts.findFirst({ where: query });
+  async findOne(query: Prisma.PostsWhereInput): Promise<Posts | null> {
+    return await this.prisma.posts.findFirst({ where: query });
   }
 
-  async getTotalPosts(query?: Prisma.PostsWhereInput) {
+  async getTotalPosts(query?: Prisma.PostsWhereInput): Promise<number> {
     return await this.prisma.posts.count({ where: query });
   }
 }

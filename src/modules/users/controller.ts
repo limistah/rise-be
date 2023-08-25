@@ -17,7 +17,7 @@ export class UsersController extends BaseController {
     this.postsService = new PostsService();
   }
 
-  public async createUser(req: Request, res: Response) {
+  public async createUser(req: Request, res: Response): Promise<Response> {
     try {
       const result = validationResult(req);
       if (!result.isEmpty()) {
@@ -48,7 +48,7 @@ export class UsersController extends BaseController {
     }
   }
 
-  public async getUserPosts(req: Request, res: Response) {
+  public async getUserPosts(req: Request, res: Response): Promise<Response> {
     try {
       const result = validationResult(req);
       if (!result.isEmpty()) {
@@ -88,7 +88,7 @@ export class UsersController extends BaseController {
     }
   }
 
-  public async getUsers(req: Request, res: Response) {
+  public async getUsers(req: Request, res: Response): Promise<Response> {
     try {
       const result = validationResult(req);
       if (!result.isEmpty()) {
@@ -117,7 +117,10 @@ export class UsersController extends BaseController {
     }
   }
 
-  public async getUserWithMostPosts(req: Request, res: Response) {
+  public async getUserWithMostPosts(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
     try {
       const usersWithMostPosts = await this.service.usersWithMostPosts();
       const response = new BaseResponse(200, usersWithMostPosts).get();

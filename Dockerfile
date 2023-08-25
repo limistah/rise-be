@@ -9,6 +9,7 @@ ARG NODE_ENV=development
 FROM node:latest as base
 WORKDIR /app
 COPY --from=builder /app/build /app/build
+COPY --from=builder /app/entrypoint.sh /app/entrypoint.sh
 COPY --from=builder /app/prisma /app/prisma
 COPY --from=builder /app/entrypoint.sh /app/entrypoint.sh
 COPY --from=builder /app/yarn.lock /app/yarn.lock
