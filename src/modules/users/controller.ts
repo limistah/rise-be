@@ -14,33 +14,52 @@ export class UsersController extends BaseController {
   }
 
   public async createUser(req: Request, res: Response) {
-    const result = validationResult(req);
-    if (!result.isEmpty) {
-      const response = new BaseResponse(HTTP_STATUS.BAD_REQUEST, {
-        errors: result.array(),
-      }).get();
+    try {
+      const result = validationResult(req);
+      if (!result.isEmpty()) {
+        const response = new BaseResponse(
+          HTTP_STATUS.BAD_REQUEST,
+          null,
+          null,
+          result.array()
+        ).get();
+        return res.status(response.status).json(response);
+      }
+
+      const user = await this.service.createUser({
+        firstName: req.body.firstName,
+        lastName: req.body.firstName,
+        gender: req.body.gender,
+      });
+
+      const response = new BaseResponse(201, user).get();
+      return res.status(response.status).json(response);
+    } catch (error) {
+      const response = new BaseResponse(400, null, null, error).get();
       return res.status(response.status).json(response);
     }
-    const user = await this.service.createUser({
-      firstName: req.body.firstName,
-      lastName: req.body.firstName,
-      gender: req.body.gender,
-    });
-    const response = new BaseResponse(200, user).get();
-    return res.status(response.status).json(response);
   }
 
   public async getUsers(req: Request, res: Response) {
-    const result = validationResult(req);
-    if (!result.isEmpty) {
-      const response = new BaseResponse(HTTP_STATUS.BAD_REQUEST, {
-        errors: result.array(),
-      }).get();
+    try {
+      const result = validationResult(req);
+      if (!result.isEmpty()) {
+        const response = new BaseResponse(HTTP_STATUS.BAD_REQUEST, {
+          errors: result.array(),
+        }).get();
+        return res.status(response.status).json(response);
+      }
+      const qs = querystring.parse(req.url.split('?')[1]);
+      const users = await this.service.getUsers(
+        Number(qs.take || 10),
+        Number(qs.skip || 0)
+      );
+      const totalUsers = await this.service.getTotalUsers();
+      const response = new BaseResponse(200, users, totalUsers).get();
+      return res.status(response.status).json(response);
+    } catch (error) {
+      const response = new BaseResponse(400, null, null, error).get();
       return res.status(response.status).json(response);
     }
-    const qs = querystring.parse(req.originalUrl);
-    const users = await this.service.getUsers(String(qs.take), String(qs.skip));
-    const response = new BaseResponse(200, users).get();
-    return res.status(response.status).json(response);
   }
 }

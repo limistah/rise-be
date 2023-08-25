@@ -1,5 +1,6 @@
 export interface BaseResponseType {
   status: number;
-  data?: Record<string, any>;
+  total?: number | null;
+  data: null | Record<string, any>;
   error: boolean;
 }
