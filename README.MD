@@ -58,6 +58,24 @@ GROUP BY "U".id, "C"."content", "C"."userId", "P".id, "C"."id"
 ORDER BY "post_count" DESC LIMIT 3
 ```
 
+## Setup
+
+Install deps:
+`yarn install`
+
+Setup Environment Variables
+`cat .env.sample > .env`
+
+Start dev server
+`yarn dev`
+
+To run tests:
+`yarn test`
+
+To run with Docker Compose
+`docker compose up`
+
+
 
 
 
