@@ -50,13 +50,17 @@ SELECT
 FROM
     "Users" "U"
     
-LEFT JOIN "Posts" "P" 
-  ON "U"."id" = "P"."userId"
+JOIN (
+    SELECT
+        "id", "userId"
+    FROM
+        "Posts"
+) "P" ON "U"."id" = "P"."userId"
 
 LEFT JOIN (
     SELECT "C1"."userId", "C1"."content", "C1".id 
     FROM "Comments" "C1" 
-    INNER JOIN (
+    JOIN (
         SELECT "userId", MAX("createdAt") AS max_created_at
         FROM "Comments" 
         GROUP BY "userId"
