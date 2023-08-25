@@ -116,4 +116,20 @@ export class UsersController extends BaseController {
       return res.status(response.status).json(response);
     }
   }
+
+  public async getUserWithMostPosts(req: Request, res: Response) {
+    try {
+      const usersWithMostPosts = await this.service.usersWithMostPosts();
+      const response = new BaseResponse(200, usersWithMostPosts).get();
+      return res.status(response.status).json(response);
+    } catch (error) {
+      const response = new BaseResponse(
+        HTTP_STATUS.BAD_REQUEST,
+        null,
+        null,
+        error as Error
+      ).get();
+      return res.status(response.status).json(response);
+    }
+  }
 }

@@ -22,5 +22,11 @@ router.get(
   }
 );
 
+
+router.get('/most-posts', (req: Request, res: Response) => {
+  const controller = new UsersController();
+  return controller.getUserWithMostPosts(req, res);
+});
+
 const BASE_PATH = '/users';
 export { router, BASE_PATH };
